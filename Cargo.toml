@@ -7,3 +7,4 @@ license-file = "LICENSE.txt"
 edition = "2021"
 
 [dependencies]
+itertools = "0.10.5"
