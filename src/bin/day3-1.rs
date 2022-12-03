@@ -39,20 +39,15 @@ use std::fs;
 fn main() {
     let input = fs::read_to_string("src/bin/day3.txt").unwrap();
 
-    let priorities: u32 = input.lines()
+    let priorities: u32 = input
+        .lines()
         .map(|line| {
-            let second = line[line.len()/2..].to_string();
-            let mut shared: String = line[..line.len()/2].to_string();
+            let second = line[line.len() / 2..].to_string();
+            let mut shared: String = line[..line.len() / 2].to_string();
             shared.retain(|c| second.contains(c));
             shared.chars().next().unwrap()
         })
-        .map(|c|
-            if c.is_lowercase() {
-                c as u32 - 96u32
-            } else {
-                c as u32 - 38u32
-            }
-        )
+        .map(|c| c as u32 - if c.is_lowercase() { 96u32 } else { 38u32 })
         .sum();
 
     println!("Solution: {priorities}");

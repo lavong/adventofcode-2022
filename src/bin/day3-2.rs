@@ -27,10 +27,10 @@ Priorities for these items must still be found to organize the sticker attachmen
 
 Find the item type that corresponds to the badges of each three-Elf group. What is the sum of the priorities of those item types?
 */
+use itertools::Chunk;
+use itertools::Itertools;
 use std::fs;
 use std::str::Lines;
-use itertools::Itertools;
-use itertools::Chunk;
 
 fn main() {
     let input = fs::read_to_string("src/bin/day3.txt").unwrap();
@@ -38,14 +38,8 @@ fn main() {
     let chunks = input.lines().chunks(3);
     let priorities: u32 = chunks
         .into_iter()
-        .map(|chunk| find_badge(chunk) )
-        .map(|c|
-            if c.is_lowercase() {
-                c as u32 - 96u32
-            } else {
-                c as u32 - 38u32
-            }
-        )
+        .map(|chunk| find_badge(chunk))
+        .map(|c| c as u32 - if c.is_lowercase() { 96u32 } else { 38u32 })
         .sum();
 
     println!("Solution: {priorities}");
