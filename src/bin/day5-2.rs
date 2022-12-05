@@ -86,21 +86,18 @@ fn main() {
     input
         .lines()
         .filter(|l| l.starts_with("move"))
-        .map(|l| {
+        .for_each(|l| {
             let s = l.split(" ").collect::<Vec<_>>();
-            Rearrangement {
-                quantity: s[1].parse().unwrap(),
-                start: s[3].parse().unwrap(),
-                destination: s[5].parse().unwrap(),
-            }
-        })
-        .for_each(|r| {
-            supply_stacks[r.start - 1]
-                .drain(0..r.quantity)
+            let quantity: usize = s[1].parse().unwrap();
+            let start: usize = s[3].parse().unwrap();
+            let destination: usize = s[5].parse().unwrap();
+
+            supply_stacks[start - 1]
+                .drain(0..quantity)
                 .rev()
                 .collect::<String>()
                 .chars()
-                .for_each(|c| supply_stacks[r.destination - 1].push_front(c))
+                .for_each(|c| supply_stacks[destination - 1].push_front(c))
         });
 
     let top_crates: String = (0..stack_count)
@@ -108,11 +105,4 @@ fn main() {
         .collect();
 
     println!("Solution: {top_crates}");
-}
-
-#[derive(Debug, Default)]
-struct Rearrangement {
-    quantity: usize,
-    start: usize,
-    destination: usize,
 }
