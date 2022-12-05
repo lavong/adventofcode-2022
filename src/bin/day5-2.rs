@@ -74,7 +74,6 @@ fn main() {
 
     let mut supply_stacks: Vec<VecDeque<char>> = vec![];
     supply_stacks.resize(stack_count as usize, VecDeque::new());
-
     stack_input.iter().rev().for_each(|s| {
         for i in 1..=stack_count {
             let c = s.chars().nth((i + (i - 1) * 3) as usize).unwrap();
@@ -84,23 +83,25 @@ fn main() {
         }
     });
 
-    let rearrangements = input.lines().filter(|l| l.starts_with("move")).map(|l| {
-        let s = l.split(" ").collect::<Vec<_>>();
-        Rearrangement {
-            quantity: s[1].parse().unwrap(),
-            start: s[3].parse().unwrap(),
-            destination: s[5].parse().unwrap(),
-        }
-    });
-
-    rearrangements.for_each(|r| {
-        supply_stacks[r.start - 1]
-            .drain(0..r.quantity)
-            .rev()
-            .collect::<String>()
-            .chars()
-            .for_each(|c| supply_stacks[r.destination - 1].push_front(c));
-    });
+    input
+        .lines()
+        .filter(|l| l.starts_with("move"))
+        .map(|l| {
+            let s = l.split(" ").collect::<Vec<_>>();
+            Rearrangement {
+                quantity: s[1].parse().unwrap(),
+                start: s[3].parse().unwrap(),
+                destination: s[5].parse().unwrap(),
+            }
+        })
+        .for_each(|r| {
+            supply_stacks[r.start - 1]
+                .drain(0..r.quantity)
+                .rev()
+                .collect::<String>()
+                .chars()
+                .for_each(|c| supply_stacks[r.destination - 1].push_front(c))
+        });
 
     let top_crates: String = (0..stack_count)
         .map(|i| supply_stacks[i as usize].pop_front().unwrap())
