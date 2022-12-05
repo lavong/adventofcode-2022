@@ -9,17 +9,17 @@ The CrateMover 9001 is notable for many new and exciting features: air condition
 
 Again considering the example above, the crates begin in the same configuration:
 
-    [D]    
-[N] [C]    
+    [D]
+[N] [C]
 [Z] [M] [P]
- 1   2   3 
+ 1   2   3
 
 Moving a single crate from stack 2 to stack 1 behaves the same as before:
 
-[D]        
-[N] [C]    
+[D]
+[N] [C]
 [Z] [M] [P]
- 1   2   3 
+ 1   2   3
 
 However, the action of moving three crates from stack 1 to stack 3 means that those three moved crates stay in the same order, resulting in this new configuration:
 
@@ -72,16 +72,14 @@ fn main() {
         .to_digit(10)
         .unwrap();
 
-    stack_input.reverse();
-    let mut supply_stacks = SupplyStacks::default();
-    supply_stacks
-        .stacks
-        .resize(stack_count as usize, VecDeque::new());
-    stack_input.iter().for_each(|s| {
+    let mut supply_stacks: Vec<VecDeque<char>> = vec![];
+    supply_stacks.resize(stack_count as usize, VecDeque::new());
+
+    stack_input.iter().rev().for_each(|s| {
         for i in 1..=stack_count {
             let c = s.chars().nth((i + (i - 1) * 3) as usize).unwrap();
             if c.is_alphabetic() {
-                supply_stacks.stacks[(i - 1) as usize].push_front(c)
+                supply_stacks[(i - 1) as usize].push_front(c)
             }
         }
     });
@@ -96,15 +94,16 @@ fn main() {
     });
 
     rearrangements.for_each(|r| {
-        supply_stacks.stacks[r.start - 1]
+        supply_stacks[r.start - 1]
             .drain(0..r.quantity)
             .rev()
             .collect::<String>()
             .chars()
-            .for_each(|c| supply_stacks.stacks[r.destination - 1].push_front(c));
+            .for_each(|c| supply_stacks[r.destination - 1].push_front(c));
     });
+
     let top_crates: String = (0..stack_count)
-        .map(|i| supply_stacks.stacks[i as usize].pop_front().unwrap())
+        .map(|i| supply_stacks[i as usize].pop_front().unwrap())
         .collect();
 
     println!("Solution: {top_crates}");
@@ -115,9 +114,4 @@ struct Rearrangement {
     quantity: usize,
     start: usize,
     destination: usize,
-}
-
-#[derive(Debug, Default)]
-struct SupplyStacks {
-    stacks: Vec<VecDeque<char>>,
 }
