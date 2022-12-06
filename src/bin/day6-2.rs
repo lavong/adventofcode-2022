@@ -23,10 +23,11 @@ fn main() {
     let input = fs::read_to_string("src/bin/day6.txt").unwrap();
 
     let chars = input.chars().collect_vec();
-    let mut marker = 14;
-    for tuple in chars.windows(14) {
+    let window_size = 14;
+    let mut marker = window_size;
+    for tuple in chars.windows(window_size) {
         let mut tuple_set: HashSet<char> = HashSet::new();
-        let all_different = (0..14)
+        let all_different = (0..window_size)
             .map(|i| tuple[i])
             .fold(true, |acc, c| acc && tuple_set.insert(c));
         if all_different {
