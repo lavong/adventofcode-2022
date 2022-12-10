@@ -143,8 +143,8 @@ fn main() {
         })
         .cycle();
 
-    for cycle in 1..=240 {
-        let i = (cycle - 1) % 40;
+    for cycle in 0..240 {
+        let i = cycle % 40;
         if i == 0 {
             crt.push('\n')
         }
